@@ -1,0 +1,1175 @@
+<title>Pipolymechanic Craft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+:root {
+  --red:#D63031;--red-dark:#B02525;--red-faint:rgba(214,48,49,.08);
+  --bg:#F0EFED;--surface:#FAFAF8;--surface2:#FFFFFF;--border:#E2E1DF;
+  --text:#1A1A22;--text2:#5A5A65;--text3:#9A9AA5;
+  --sidebar:#1E1E24;--sidebar-h:#2A2A32;--stext:#C8C8D0;
+  --ok:#00897B;--warn:#E67E22;--info:#2980B9;--purple:#8e44ad;
+  --sh0:0 1px 3px rgba(0,0,0,.08);--sh1:0 4px 16px rgba(0,0,0,.12);--sh2:0 8px 32px rgba(0,0,0,.18);
+  --r:6px;--rl:10px;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141418;--surface:#1E1E24;--surface2:#28282F;--border:#38383F;
+  --text:#F0F0F4;--text2:#A0A0AB;--text3:#606068;
+  --sidebar:#111115;--sidebar-h:#1A1A20;--stext:#B0B0B8;
+  --sh0:0 1px 3px rgba(0,0,0,.3);--sh1:0 4px 16px rgba(0,0,0,.4);--sh2:0 8px 32px rgba(0,0,0,.55);
+}}
+:root[data-theme="dark"]{
+  --bg:#141418;--surface:#1E1E24;--surface2:#28282F;--border:#38383F;
+  --text:#F0F0F4;--text2:#A0A0AB;--text3:#606068;
+  --sidebar:#111115;--sidebar-h:#1A1A20;--stext:#B0B0B8;
+  --sh0:0 1px 3px rgba(0,0,0,.3);--sh1:0 4px 16px rgba(0,0,0,.4);--sh2:0 8px 32px rgba(0,0,0,.55);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;line-height:1.5}
+
+/* ── Sidebar ── */
+.sb{width:220px;min-width:220px;background:var(--sidebar);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto}
+.sb-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo-mark{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:1px;color:var(--red);line-height:1}
+.sb-logo-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--stext);opacity:.5;margin-top:2px}
+.sb-nav{flex:1;padding:10px 0}
+.sb-sec{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--stext);opacity:.35;padding:14px 20px 5px}
+.nav{display:flex;align-items:center;gap:9px;padding:9px 20px;color:var(--stext);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:background .12s,color .12s;user-select:none}
+.nav:hover{background:var(--sidebar-h);color:#fff}
+.nav.act{background:var(--sidebar-h);border-left-color:var(--red);color:#fff}
+.nav svg{width:15px;height:15px;opacity:.65;flex-shrink:0}
+.nav.act svg,.nav:hover svg{opacity:1}
+.sb-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:var(--stext);opacity:.3;line-height:1.5}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 26px;height:58px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;gap:14px}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:var(--text)}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.searchbox{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:6px 11px;min-width:200px}
+.searchbox input{border:none;background:none;color:var(--text);font-size:13px;font-family:inherit;outline:none;width:100%}
+.searchbox input::placeholder{color:var(--text3)}
+.searchbox svg{color:var(--text3);width:13px;height:13px;flex-shrink:0}
+
+.content{flex:1;padding:26px;overflow-y:auto}
+.sec{display:none}.sec.act{display:block}
+
+/* ── KPI ── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:26px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh0)}
+.kpi.a{border-left:3px solid var(--red)}.kpi.b{border-left:3px solid var(--ok)}.kpi.c{border-left:3px solid var(--warn)}.kpi.d{border-left:3px solid var(--info)}
+.kpi-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.kpi-val{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:var(--text);line-height:1}
+.kpi-sub{font-size:11px;color:var(--text2);margin-top:3px}
+
+/* ── Card ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh0);overflow:hidden;margin-bottom:18px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px}
+.card-title{font-weight:600;font-size:13.5px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);padding:9px 14px;background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--bg)}
+.td-act{display:flex;gap:5px;justify-content:flex-end}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:var(--r);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:background .13s,opacity .13s;text-decoration:none;white-space:nowrap;line-height:1.4}
+.btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.btn-p{background:var(--red);color:#fff}.btn-p:hover{background:var(--red-dark)}
+.btn-s{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-s:hover{background:var(--bg)}
+.btn-g{background:none;color:var(--text2);padding:5px 9px}.btn-g:hover{background:var(--bg);color:var(--text)}
+.btn-d{background:var(--red);color:#fff}.btn-d:hover{background:var(--red-dark)}
+.btn-sm{padding:4px 10px;font-size:11.5px}
+.btn svg{width:13px;height:13px}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:10.5px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap}
+.b-offen{background:rgba(41,128,185,.12);color:#2980B9}
+.b-arbeit{background:rgba(230,126,34,.12);color:#E67E22}
+.b-erledigt{background:rgba(0,137,123,.12);color:#00897B}
+.b-fakturiert{background:rgba(142,68,173,.12);color:#8e44ad}
+.b-bezahlt{background:rgba(0,137,123,.12);color:#00897B}
+.b-ueberfaellig{background:rgba(214,48,49,.12);color:var(--red)}
+
+/* ── Forms ── */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg.full{grid-column:1/-1}
+label{font-size:11px;font-weight:600;letter-spacing:.3px;color:var(--text2);text-transform:uppercase}
+input,select,textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:7px 11px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .13s}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+textarea{resize:vertical;min-height:72px}
+select option{background:var(--surface);color:var(--text)}
+.fsec{margin-bottom:22px}
+.fsec-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--text);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+
+/* ── Modal ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;padding:18px}
+.mo.open{display:flex}
+.mbox{background:var(--surface);border-radius:var(--rl);box-shadow:var(--sh2);width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.mbox.lg{max-width:860px}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);flex-shrink:0}
+.mtitle{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px}
+.mbody{flex:1;overflow-y:auto;padding:22px}
+.mfoot{display:flex;justify-content:flex-end;gap:9px;padding:14px 22px;border-top:1px solid var(--border);flex-shrink:0}
+
+/* ── Toast ── */
+.tc{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:7px}
+.toast{display:flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;box-shadow:var(--sh1);font-size:13px;color:var(--text);animation:si .2s ease;min-width:220px}
+.toast.ok{border-left:3px solid var(--ok)}.toast.err{border-left:3px solid var(--red)}.toast.inf{border-left:3px solid var(--info)}
+@keyframes si{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── Position rows ── */
+.pos-wrap{overflow-x:auto}
+.pt{width:100%;border-collapse:collapse;font-size:12.5px}
+.pt th{background:var(--bg);padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:var(--text3);letter-spacing:.5px;white-space:nowrap}
+.pt td{padding:5px 4px;border-bottom:1px solid var(--border);vertical-align:middle}
+.pt td:nth-child(4),.pt td:nth-child(5),.pt td:nth-child(6){text-align:right}
+.pt input,.pt select{padding:4px 7px;font-size:12.5px;width:100%}
+.pos-total{display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding:10px 0 0;border-top:2px solid var(--border);margin-top:6px}
+.ptr{display:flex;gap:18px;font-size:12.5px;color:var(--text2)}
+.ptr.grand{font-weight:700;font-size:14px;color:var(--text)}
+.ptr span:last-child{font-variant-numeric:tabular-nums;min-width:80px;text-align:right}
+
+/* ── Photos ── */
+.phgrid{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+.ph-thumb{width:76px;height:76px;object-fit:cover;border-radius:var(--r);border:2px solid var(--border);cursor:pointer;transition:border-color .13s}
+.ph-thumb:hover{border-color:var(--red)}
+.ph-wrap{position:relative;display:inline-block}
+.ph-del{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.ph-add{width:76px;height:76px;border:2px dashed var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);font-size:22px;transition:border-color .13s,color .13s}
+.ph-add:hover{border-color:var(--red);color:var(--red)}
+#phInp{display:none}
+
+/* ── Lightbox ── */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb img{max-width:90vw;max-height:90vh;border-radius:var(--r)}
+.lb-x{position:absolute;top:18px;right:22px;color:#fff;font-size:30px;cursor:pointer;line-height:1;background:none;border:none}
+
+/* ── Fahrzeug cards ── */
+.fzcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px;margin-top:8px}
+.fzcard{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:13px;position:relative}
+.fzcard-t{font-weight:600;font-size:13.5px;margin-bottom:3px}
+.fzcard-s{font-size:12px;color:var(--text2);line-height:1.6}
+.fzcard-act{position:absolute;top:9px;right:9px;display:flex;gap:4px}
+
+/* ── Confirm ── */
+.co{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;align-items:center;justify-content:center}
+.co.open{display:flex}
+.cbox{background:var(--surface);border-radius:var(--rl);padding:26px;max-width:360px;width:100%;box-shadow:var(--sh2)}
+.ctitle{font-weight:700;font-size:15px;margin-bottom:7px}
+.ctext{font-size:13px;color:var(--text2);margin-bottom:18px}
+.cact{display:flex;justify-content:flex-end;gap:9px}
+
+/* ── Invoice print view ── */
+.inv-wrap{background:#fff;color:#1a1a22;padding:44px;max-width:780px;margin:0 auto;border:1px solid var(--border);border-radius:var(--rl);font-family:'Inter',sans-serif}
+.inv-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px}
+.inv-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#D63031}
+.inv-brand-d{font-size:11.5px;line-height:1.7;color:#555;margin-top:3px}
+.inv-meta{text-align:right}
+.inv-nr{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px}
+.inv-meta-d{font-size:11.5px;color:#555;line-height:1.8}
+.inv-kd{margin-bottom:28px}
+.inv-kd-lbl{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:5px}
+.inv-kd-n{font-weight:600;font-size:14px}
+.inv-kd-d{font-size:12.5px;color:#444;line-height:1.6}
+.inv-hr{border:none;border-top:1px solid #e0e0e0;margin:20px 0}
+.ipt{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:20px}
+.ipt th{text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:#888;padding:7px 7px;border-bottom:2px solid #e0e0e0}
+.ipt td{padding:9px 7px;border-bottom:1px solid #f0f0f0}
+.ipt td:nth-child(3),.ipt td:nth-child(4),.ipt td:nth-child(5),.ipt th:nth-child(3),.ipt th:nth-child(4),.ipt th:nth-child(5){text-align:right}
+.ipt tr:last-child td{border-bottom:none}
+.itotals{margin-left:auto;width:210px}
+.itr{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;color:#555}
+.itr.grand{font-weight:700;font-size:15px;color:#1a1a22;border-top:2px solid #1a1a22;padding-top:7px;margin-top:4px}
+.itr span:last-child{font-variant-numeric:tabular-nums}
+.ibank{margin-top:36px;padding-top:18px;border-top:1px solid #e0e0e0}
+.ibank-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:7px}
+.ibank-d{font-size:12px;color:#444;line-height:1.8}
+.ifoot{margin-top:28px;font-size:10.5px;color:#aaa;text-align:center}
+
+@media print{
+  body>*{display:none!important}
+  #parea{display:block!important;position:fixed;inset:0;background:#fff;z-index:9999;overflow:auto}
+  .inv-wrap{border:none;padding:0;margin:0;max-width:100%;border-radius:0}
+  @page{margin:15mm}
+}
+#parea{display:none}
+
+/* ── Empty state ── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 22px;color:var(--text3);gap:11px;text-align:center}
+.empty svg{width:36px;height:36px;opacity:.35}
+.empty p{font-size:13.5px}
+
+/* ── Detail rows ── */
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+.df{}.df-lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:1px}
+.df-val{font-size:13px;color:var(--text)}
+
+/* ── Filter bar ── */
+.fbar{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.fbar select,.fbar input{padding:6px 11px;font-size:13px}
+
+.sep{height:1px;background:var(--border);margin:14px 0}
+.mt4{margin-top:16px}.mt2{margin-top:8px}.mb4{margin-bottom:16px}
+.flex{display:flex}.ic{align-items:center}.jb{justify-content:space-between}.g2{gap:8px}.g4{gap:16px}
+
+/* ── Recent activity ── */
+.act-list{display:flex;flex-direction:column;gap:0}
+.act-item{display:flex;align-items:center;gap:12px;padding:11px 18px;border-bottom:1px solid var(--border);font-size:13px}
+.act-item:last-child{border-bottom:none}
+.act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.act-dot.r{background:var(--red)}.act-dot.g{background:var(--ok)}.act-dot.o{background:var(--warn)}.act-dot.b{background:var(--info)}
+.act-txt{flex:1;color:var(--text)}
+.act-time{font-size:11px;color:var(--text3);white-space:nowrap}
+</style>
+
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">Pipolymechanic</div>
+    <div class="sb-logo-sub">Craft Workshop</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Hauptmenü</div>
+    <a class="nav act" data-sec="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a class="nav" data-sec="kunden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Kunden
+    </a>
+    <a class="nav" data-sec="auftraege">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Aufträge
+    </a>
+    <a class="nav" data-sec="rechnungen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Rechnungen
+    </a>
+    <div class="sb-sec">System</div>
+    <a class="nav" data-sec="einstellungen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Einstellungen
+    </a>
+  </nav>
+  <div class="sb-foot">© 2025 Pipolymechanic<br>Craft Workshop</div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title" id="topTitle">Dashboard</span>
+    <div class="topbar-r">
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearch" placeholder="Suchen…" autocomplete="off">
+      </div>
+      <button class="btn btn-p" id="topAction" onclick="topActionClick()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Neu
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Dashboard -->
+    <div class="sec act" id="sec-dashboard">
+      <div class="kpis" id="kpi-row"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Offene Aufträge</span><a class="btn btn-g btn-sm" data-sec="auftraege">Alle</a></div>
+          <div id="dash-auftraege"></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Letzte Aktivität</span></div>
+          <div id="dash-activity" class="act-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kunden -->
+    <div class="sec" id="sec-kunden">
+      <div class="fbar">
+        <input type="text" id="kundenSearch" placeholder="Kunden suchen…" style="flex:1;min-width:160px" oninput="renderKunden()">
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title" id="kundenCount">Kunden</span></div>
+        <div class="tw"><table>
+          <thead><tr><th>#</th><th>Name</th><th>Telefon</th><th>E-Mail</th><th>Fahrzeuge</th><th>Aufträge</th><th></th></tr></thead>
+          <tbody id="kundenBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- Aufträge -->
+    <div class="sec" id="sec-auftraege">
+      <div class="fbar">
+        <input type="text" id="auftraegeSearch" placeholder="Aufträge suchen…" style="flex:1;min-width:160px" oninput="renderAuftraege()">
+        <select id="auftraegeStatus" onchange="renderAuftraege()">
+          <option value="">Alle Status</option>
+          <option value="offen">Offen</option>
+          <option value="in-arbeit">In Arbeit</option>
+          <option value="erledigt">Erledigt</option>
+          <option value="fakturiert">Fakturiert</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title" id="auftraegeCount">Aufträge</span></div>
+        <div class="tw"><table>
+          <thead><tr><th>#</th><th>Titel</th><th>Kunde</th><th>Fahrzeug</th><th>Status</th><th>Erstellt</th><th></th></tr></thead>
+          <tbody id="auftraegeBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- Rechnungen -->
+    <div class="sec" id="sec-rechnungen">
+      <div class="fbar">
+        <input type="text" id="rechnungenSearch" placeholder="Rechnungen suchen…" style="flex:1;min-width:160px" oninput="renderRechnungen()">
+        <select id="rechnungenStatus" onchange="renderRechnungen()">
+          <option value="">Alle Status</option>
+          <option value="offen">Offen</option>
+          <option value="bezahlt">Bezahlt</option>
+          <option value="ueberfaellig">Überfällig</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title" id="rechnungenCount">Rechnungen</span></div>
+        <div class="tw"><table>
+          <thead><tr><th>Nr.</th><th>Kunde</th><th>Datum</th><th>Fällig</th><th>Betrag</th><th>Status</th><th></th></tr></thead>
+          <tbody id="rechnungenBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- Einstellungen -->
+    <div class="sec" id="sec-einstellungen">
+      <div class="card" style="max-width:640px">
+        <div class="card-hd"><span class="card-title">Firmenangaben</span></div>
+        <div style="padding:22px">
+          <div class="fgrid" id="settFirma"></div>
+        </div>
+      </div>
+      <div class="card" style="max-width:640px">
+        <div class="card-hd"><span class="card-title">Bankverbindung & Zahlungen</span></div>
+        <div style="padding:22px">
+          <div class="fgrid" id="settBank"></div>
+        </div>
+      </div>
+      <div style="max-width:640px;display:flex;justify-content:flex-end;gap:9px">
+        <button class="btn btn-s" onclick="exportData()">Daten exportieren</button>
+        <button class="btn btn-p" onclick="saveSettings()">Einstellungen speichern</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="mo" id="mo" onclick="if(event.target===this)closeModal()">
+  <div class="mbox" id="mbox">
+    <div class="mhd">
+      <span class="mtitle" id="mtitle"></span>
+      <button class="btn btn-g" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mfoot" id="mfoot"></div>
+  </div>
+</div>
+
+<!-- Confirm -->
+<div class="co" id="co">
+  <div class="cbox">
+    <div class="ctitle" id="ctitle"></div>
+    <div class="ctext" id="ctext"></div>
+    <div class="cact">
+      <button class="btn btn-s" onclick="closeConfirm()">Abbrechen</button>
+      <button class="btn btn-d" id="cok">Löschen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <button class="lb-x" onclick="closeLb()">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<!-- Print area -->
+<div id="parea"></div>
+
+<!-- Toast container -->
+<div class="tc" id="tc"></div>
+
+<input type="file" id="phInp" accept="image/*" multiple>
+
+<script>
+// ── DB ──────────────────────────────────────────────────────────
+const DB = {
+  get(k){try{return JSON.parse(localStorage.getItem('pipo_'+k)||'null')}catch{return null}},
+  set(k,v){try{localStorage.setItem('pipo_'+k,JSON.stringify(v))}catch(e){toast('Speicherfehler: Speicher voll?','err')}},
+  kunden(){return this.get('kunden')||[]},
+  auftraege(){return this.get('auftraege')||[]},
+  rechnungen(){return this.get('rechnungen')||[]},
+  settings(){return this.get('settings')||{firma:{name:'Pipolymechanic Craft',strasse:'',plz:'',ort:'',telefon:'',email:'',uid:'',website:'pipolymechanic-craft.ch'},bank:{iban:'',bank:'',zahlungsfrist:'30'}}},
+  nextId(arr){return arr.length?Math.max(...arr.map(x=>x.id||0))+1:1},
+  nextNr(arr,prefix){const nums=arr.map(x=>parseInt((x.nr||'0').replace(/\D/g,''))||0);return prefix+String((nums.length?Math.max(...nums):0)+1).padStart(4,'0')},
+  log(txt,type){const logs=this.get('logs')||[];logs.unshift({txt,type,ts:Date.now()});if(logs.length>50)logs.pop();this.set('logs',logs)},
+  logs(){return this.get('logs')||[]}
+};
+
+// ── Utils ────────────────────────────────────────────────────────
+const fmt={
+  chf(n){return 'CHF '+parseFloat(n||0).toFixed(2)},
+  date(s){if(!s)return '—';const d=new Date(s);return d.toLocaleDateString('de-CH')},
+  dt(s){if(!s)return '—';const d=new Date(s);return d.toLocaleDateString('de-CH')},
+  rel(s){if(!s)return '';const d=new Date(s),n=new Date();const diff=Math.round((d-n)/(1000*60*60*24));if(diff===0)return'heute';if(diff>0)return`in ${diff}d`;return`vor ${-diff}d`}
+};
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function badgeHtml(status){const m={'offen':'b-offen','in-arbeit':'b-arbeit','erledigt':'b-erledigt','fakturiert':'b-fakturiert','bezahlt':'b-bezahlt','ueberfaellig':'b-ueberfaellig'};const l={'offen':'Offen','in-arbeit':'In Arbeit','erledigt':'Erledigt','fakturiert':'Fakturiert','bezahlt':'Bezahlt','ueberfaellig':'Überfällig'};return`<span class="badge ${m[status]||''}">${l[status]||status}</span>`}
+function statusRechnung(r){if(r.status==='bezahlt')return'bezahlt';if(new Date(r.faelligAm)<new Date()&&r.status==='offen')return'ueberfaellig';return r.status||'offen'}
+
+// ── Toast ────────────────────────────────────────────────────────
+function toast(msg,type='ok'){
+  const tc=document.getElementById('tc');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=(type==='ok'?'✓':type==='err'?'✗':'ℹ')+' '+esc(msg);
+  tc.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+// ── Router ───────────────────────────────────────────────────────
+const titles={dashboard:'Dashboard',kunden:'Kunden',auftraege:'Aufträge',rechnungen:'Rechnungen',einstellungen:'Einstellungen'};
+const topActionLabels={dashboard:'',kunden:'Neuer Kunde',auftraege:'Neuer Auftrag',rechnungen:'Neue Rechnung',einstellungen:''};
+let currentSec='dashboard';
+
+function goto(sec){
+  currentSec=sec;
+  document.querySelectorAll('.nav').forEach(n=>{n.classList.toggle('act',n.dataset.sec===sec)});
+  document.querySelectorAll('.sec').forEach(s=>{s.classList.toggle('act',s.id==='sec-'+sec)});
+  document.getElementById('topTitle').textContent=titles[sec]||sec;
+  const ta=document.getElementById('topAction');
+  if(topActionLabels[sec]){ta.style.display='';ta.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`+topActionLabels[sec]}
+  else{ta.style.display='none'}
+  renderSec(sec);
+}
+
+function topActionClick(){
+  if(currentSec==='kunden')openKundeModal();
+  else if(currentSec==='auftraege')openAuftragModal();
+  else if(currentSec==='rechnungen')openRechnungModal();
+}
+
+function renderSec(sec){
+  if(sec==='dashboard')renderDashboard();
+  else if(sec==='kunden')renderKunden();
+  else if(sec==='auftraege')renderAuftraege();
+  else if(sec==='rechnungen')renderRechnungen();
+  else if(sec==='einstellungen')renderEinstellungen();
+}
+
+document.querySelectorAll('.nav,[data-sec]').forEach(el=>{
+  el.addEventListener('click',()=>{if(el.dataset.sec)goto(el.dataset.sec)});
+});
+
+// ── Modal ────────────────────────────────────────────────────────
+function openModal(title,body,foot,lg){
+  document.getElementById('mtitle').textContent=title;
+  document.getElementById('mbody').innerHTML=body;
+  document.getElementById('mfoot').innerHTML=foot;
+  document.getElementById('mbox').className='mbox'+(lg?' lg':'');
+  document.getElementById('mo').classList.add('open');
+}
+function closeModal(){document.getElementById('mo').classList.remove('open')}
+
+// ── Confirm ──────────────────────────────────────────────────────
+function confirm2(title,text,cb){
+  document.getElementById('ctitle').textContent=title;
+  document.getElementById('ctext').textContent=text;
+  document.getElementById('co').classList.add('open');
+  document.getElementById('cok').onclick=()=>{cb();closeConfirm()};
+}
+function closeConfirm(){document.getElementById('co').classList.remove('open')}
+
+// ── Lightbox ─────────────────────────────────────────────────────
+function openLb(src){document.getElementById('lb-img').src=src;document.getElementById('lb').classList.add('open')}
+function closeLb(){document.getElementById('lb').classList.remove('open')}
+
+// ── Photo util ───────────────────────────────────────────────────
+let _photoTarget=null;
+document.getElementById('phInp').addEventListener('change',async function(){
+  if(!_photoTarget)return;
+  const files=Array.from(this.files);
+  for(const f of files){
+    const b64=await resizeImg(f,800);
+    _photoTarget.push(b64);
+  }
+  this.value='';
+  renderPhotoGrid(_photoTarget,'currentPhotos',true);
+});
+async function resizeImg(file,max){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',0.82));
+      };img.src=e.target.result;
+    };r.readAsDataURL(file);
+  });
+}
+function renderPhotoGrid(photos,containerId,editable){
+  const c=document.getElementById(containerId);
+  if(!c)return;
+  c.innerHTML='';
+  photos.forEach((src,i)=>{
+    const w=document.createElement('div');w.className='ph-wrap';
+    const img=document.createElement('img');img.src=src;img.className='ph-thumb';img.onclick=()=>openLb(src);
+    w.appendChild(img);
+    if(editable){
+      const d=document.createElement('button');d.className='ph-del';d.textContent='✕';
+      d.onclick=()=>{photos.splice(i,1);renderPhotoGrid(photos,containerId,editable)};
+      w.appendChild(d);
+    }
+    c.appendChild(w);
+  });
+  if(editable){
+    const add=document.createElement('div');add.className='ph-add';add.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    add.onclick=()=>{_photoTarget=photos;document.getElementById('phInp').click()};
+    c.appendChild(add);
+  }
+}
+
+// ── Positionen util ──────────────────────────────────────────────
+function renderPosTable(pos,containerId,editable){
+  const c=document.getElementById(containerId);if(!c)return;
+  let html=`<div class="pos-wrap"><table class="pt">
+    <thead><tr><th>Typ</th><th>Bezeichnung</th><th>Menge</th><th>Einh.</th><th>Preis</th><th>Total</th>${editable?'<th></th>':''}</tr></thead>
+    <tbody>`;
+  pos.forEach((p,i)=>{
+    const tot=(parseFloat(p.menge||0)*parseFloat(p.preis||0)).toFixed(2);
+    if(editable){
+      html+=`<tr>
+        <td><select onchange="pos[${i}].typ=this.value" style="min-width:80px">
+          <option value="arbeit"${p.typ==='arbeit'?' selected':''}>Arbeit</option>
+          <option value="material"${p.typ==='material'?' selected':''}>Material</option>
+        </select></td>
+        <td><input value="${esc(p.bezeichnung)}" oninput="pos[${i}].bezeichnung=this.value" style="min-width:120px"></td>
+        <td><input type="number" value="${p.menge||1}" min="0.01" step="0.01" oninput="pos[${i}].menge=this.value;updatePosTotals()" style="width:60px"></td>
+        <td><input value="${esc(p.einheit||'Std.')}" oninput="pos[${i}].einheit=this.value" style="width:50px"></td>
+        <td><input type="number" value="${p.preis||0}" min="0" step="0.01" oninput="pos[${i}].preis=this.value;updatePosTotals()" style="width:70px"></td>
+        <td id="ptot${i}" class="font-mono">${tot}</td>
+        <td><button class="btn btn-g btn-sm" onclick="pos.splice(${i},1);refreshPosTable()">✕</button></td>
+      </tr>`;
+    } else {
+      html+=`<tr>
+        <td><span class="badge ${p.typ==='arbeit'?'b-offen':'b-info'}" style="font-size:10px">${p.typ==='arbeit'?'Arbeit':'Material'}</span></td>
+        <td>${esc(p.bezeichnung)}</td>
+        <td class="font-mono">${p.menge}</td>
+        <td>${esc(p.einheit||'Std.')}</td>
+        <td class="font-mono">${parseFloat(p.preis||0).toFixed(2)}</td>
+        <td class="font-mono">${tot}</td>
+      </tr>`;
+    }
+  });
+  html+=`</tbody></table></div>`;
+  const netto=pos.reduce((s,p)=>s+parseFloat(p.menge||0)*parseFloat(p.preis||0),0);
+  const mwst=netto*0.081;
+  html+=`<div class="pos-total" id="pos-totals-${containerId}">
+    <div class="ptr"><span>Netto</span><span>${fmt.chf(netto)}</span></div>
+    <div class="ptr"><span>MWST 8.1%</span><span>${fmt.chf(mwst)}</span></div>
+    <div class="ptr grand"><span>Total CHF</span><span>${fmt.chf(netto+mwst)}</span></div>
+  </div>`;
+  c.innerHTML=html;
+}
+let pos=[];
+function refreshPosTable(){renderPosTable(pos,'posContainer',true)}
+function updatePosTotals(){
+  pos.forEach((p,i)=>{
+    const el=document.getElementById('ptot'+i);
+    if(el)el.textContent=(parseFloat(p.menge||0)*parseFloat(p.preis||0)).toFixed(2);
+  });
+  const netto=pos.reduce((s,p)=>s+parseFloat(p.menge||0)*parseFloat(p.preis||0),0);
+  const mwst=netto*0.081;
+  const tc=document.getElementById('pos-totals-posContainer');
+  if(tc)tc.innerHTML=`
+    <div class="ptr"><span>Netto</span><span>${fmt.chf(netto)}</span></div>
+    <div class="ptr"><span>MWST 8.1%</span><span>${fmt.chf(mwst)}</span></div>
+    <div class="ptr grand"><span>Total CHF</span><span>${fmt.chf(netto+mwst)}</span></div>`;
+}
+function addPos(){pos.push({typ:'arbeit',bezeichnung:'',menge:1,einheit:'Std.',preis:0});refreshPosTable()}
+
+// ── Dashboard ────────────────────────────────────────────────────
+function renderDashboard(){
+  const kunden=DB.kunden(),auftraege=DB.auftraege(),rechnungen=DB.rechnungen();
+  const offen=auftraege.filter(a=>a.status==='offen'||a.status==='in-arbeit');
+  const offeneRechnungen=rechnungen.filter(r=>r.status!=='bezahlt');
+  const umsatz=rechnungen.filter(r=>r.status==='bezahlt').reduce((s,r)=>s+totalRechnung(r),0);
+  document.getElementById('kpi-row').innerHTML=`
+    <div class="kpi a"><div class="kpi-lbl">Kunden</div><div class="kpi-val">${kunden.length}</div><div class="kpi-sub">registriert</div></div>
+    <div class="kpi c"><div class="kpi-lbl">Offene Aufträge</div><div class="kpi-val">${offen.length}</div><div class="kpi-sub">in Bearbeitung</div></div>
+    <div class="kpi d"><div class="kpi-lbl">Offene Rechnungen</div><div class="kpi-val">${offeneRechnungen.length}</div><div class="kpi-sub">${fmt.chf(offeneRechnungen.reduce((s,r)=>s+totalRechnung(r),0))}</div></div>
+    <div class="kpi b"><div class="kpi-lbl">Umsatz bezahlt</div><div class="kpi-val">${fmt.chf(umsatz).replace('CHF ','')}</div><div class="kpi-sub">CHF</div></div>
+  `;
+  const dashA=document.getElementById('dash-auftraege');
+  if(!offen.length){dashA.innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg><p>Keine offenen Aufträge</p></div>';return}
+  dashA.innerHTML='<table><thead><tr><th>#</th><th>Titel</th><th>Status</th></tr></thead><tbody>'+
+    offen.slice(0,8).map(a=>`<tr onclick="goto('auftraege');setTimeout(()=>viewAuftrag(${a.id}),50)"><td style="color:var(--text3);font-size:11px">${esc(a.nr)}</td><td>${esc(a.titel)}</td><td>${badgeHtml(a.status)}</td></tr>`).join('')+'</tbody></table>';
+  const logs=DB.logs();
+  document.getElementById('dash-activity').innerHTML=logs.length?logs.slice(0,10).map(l=>`<div class="act-item"><div class="act-dot ${l.type||'b'}"></div><div class="act-txt">${esc(l.txt)}</div><div class="act-time">${fmt.rel(l.ts)}</div></div>`).join(''):'<div class="empty"><p style="font-size:12px">Noch keine Aktivität</p></div>';
+}
+
+// ── Kunden ───────────────────────────────────────────────────────
+function renderKunden(){
+  const all=DB.kunden();const q=(document.getElementById('kundenSearch').value||'').toLowerCase();
+  const filtered=q?all.filter(k=>(k.vorname+' '+k.nachname+' '+k.email+' '+k.telefon+' '+(k.fahrzeuge||[]).map(f=>f.kennzeichen+' '+f.marke+' '+f.modell).join(' ')).toLowerCase().includes(q)):all;
+  document.getElementById('kundenCount').textContent=`Kunden (${filtered.length})`;
+  const auftraege=DB.auftraege();
+  const body=document.getElementById('kundenBody');
+  if(!filtered.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><p>${q?'Keine Treffer':'Noch keine Kunden — neuen Kunden erfassen'}</p></div></td></tr>`;return}
+  body.innerHTML=filtered.map(k=>{
+    const fzCount=(k.fahrzeuge||[]).length;
+    const aufCount=auftraege.filter(a=>a.kundeId===k.id).length;
+    return`<tr onclick="viewKunde(${k.id})">
+      <td style="color:var(--text3);font-size:11px;white-space:nowrap">${esc(k.nr||k.id)}</td>
+      <td style="font-weight:600">${esc(k.vorname)} ${esc(k.nachname)}</td>
+      <td>${esc(k.telefon)||'—'}</td>
+      <td>${esc(k.email)||'—'}</td>
+      <td>${fzCount} Fz.</td>
+      <td>${aufCount}</td>
+      <td class="td-act" onclick="event.stopPropagation()">
+        <button class="btn btn-s btn-sm" onclick="openKundeModal(${k.id})">Bearbeiten</button>
+        <button class="btn btn-g btn-sm" onclick="delKunde(${k.id})">✕</button>
+      </td>
+    </tr>`}).join('');
+}
+
+function openKundeModal(id){
+  const k=id?DB.kunden().find(x=>x.id===id):{};
+  const f=k||{};
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Kontaktdaten</div>
+      <div class="fgrid">
+        <div class="fg"><label>Vorname</label><input id="kVorname" value="${esc(f.vorname)}"></div>
+        <div class="fg"><label>Nachname</label><input id="kNachname" value="${esc(f.nachname)}"></div>
+        <div class="fg"><label>Strasse & Nr.</label><input id="kStrasse" value="${esc(f.strasse)}"></div>
+        <div class="fg"><label>PLZ</label><input id="kPlz" value="${esc(f.plz)}"></div>
+        <div class="fg"><label>Ort</label><input id="kOrt" value="${esc(f.ort)}"></div>
+        <div class="fg"><label>Telefon</label><input id="kTel" value="${esc(f.telefon)}"></div>
+        <div class="fg full"><label>E-Mail</label><input id="kEmail" value="${esc(f.email)}"></div>
+        <div class="fg full"><label>Notizen</label><textarea id="kNotizen">${esc(f.notizen)}</textarea></div>
+      </div>
+    </div>`;
+  const foot=`<button class="btn btn-s" onclick="closeModal()">Abbrechen</button><button class="btn btn-p" onclick="saveKunde(${id||0})">Speichern</button>`;
+  openModal(id?`Kunde bearbeiten — ${f.vorname} ${f.nachname}`:'Neuer Kunde',body,foot);
+}
+
+function saveKunde(id){
+  const all=DB.kunden();
+  const data={
+    id:id||DB.nextId(all),
+    nr:id?(all.find(x=>x.id===id)||{}).nr:DB.nextNr(all,'K'),
+    vorname:document.getElementById('kVorname').value.trim(),
+    nachname:document.getElementById('kNachname').value.trim(),
+    strasse:document.getElementById('kStrasse').value.trim(),
+    plz:document.getElementById('kPlz').value.trim(),
+    ort:document.getElementById('kOrt').value.trim(),
+    telefon:document.getElementById('kTel').value.trim(),
+    email:document.getElementById('kEmail').value.trim(),
+    notizen:document.getElementById('kNotizen').value.trim(),
+    fahrzeuge:id?(all.find(x=>x.id===id)||{}).fahrzeuge||[]:[],
+    erstelltAm:id?(all.find(x=>x.id===id)||{}).erstelltAm:new Date().toISOString()
+  };
+  if(!data.nachname){toast('Nachname erforderlich','err');return}
+  if(id){const i=all.findIndex(x=>x.id===id);all[i]=data}else{all.push(data)}
+  DB.set('kunden',all);
+  DB.log(`Kunde ${data.vorname} ${data.nachname} ${id?'aktualisiert':'erstellt'}`,'b');
+  closeModal();toast(id?'Kunde gespeichert':'Kunde erstellt');renderKunden();
+}
+
+function delKunde(id){
+  const k=DB.kunden().find(x=>x.id===id);
+  confirm2('Kunde löschen',`${k.vorname} ${k.nachname} und alle zugehörigen Daten löschen?`,()=>{
+    DB.set('kunden',DB.kunden().filter(x=>x.id!==id));
+    DB.log(`Kunde ${k.vorname} ${k.nachname} gelöscht`,'r');
+    toast('Kunde gelöscht');renderKunden();
+  });
+}
+
+function viewKunde(id){
+  const k=DB.kunden().find(x=>x.id===id);if(!k)return;
+  const auftraege=DB.auftraege().filter(a=>a.kundeId===id);
+  let fzHtml=`<div class="fzcards" id="fzCards-${id}">`;
+  (k.fahrzeuge||[]).forEach((fz,i)=>{
+    fzHtml+=`<div class="fzcard">
+      <div class="fzcard-act">
+        <button class="btn btn-g btn-sm" onclick="editFahrzeug(${id},${i})">✏</button>
+        <button class="btn btn-g btn-sm" onclick="delFahrzeug(${id},${i})">✕</button>
+      </div>
+      <div class="fzcard-t">${esc(fz.marke)} ${esc(fz.modell)}</div>
+      <div class="fzcard-s">${esc(fz.kennzeichen)||'—'} · ${esc(fz.baujahr)||'—'}<br>${esc(fz.farbe)||''} ${fz.chassisNr?'· '+esc(fz.chassisNr):''}</div>
+    </div>`;
+  });
+  fzHtml+=`<div class="fzcard" style="border:2px dashed var(--border);cursor:pointer;align-items:center;justify-content:center;display:flex;flex-direction:column;gap:6px;color:var(--text3);font-size:12px" onclick="addFahrzeug(${id})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Fahrzeug
+  </div></div>`;
+
+  const aufHtml=auftraege.length?`<table><thead><tr><th>#</th><th>Titel</th><th>Status</th><th>Datum</th></tr></thead><tbody>`+
+    auftraege.map(a=>`<tr onclick="closeModal();setTimeout(()=>{goto('auftraege');setTimeout(()=>viewAuftrag(${a.id}),50)},50)"><td style="font-size:11px;color:var(--text3)">${esc(a.nr)}</td><td>${esc(a.titel)}</td><td>${badgeHtml(a.status)}</td><td>${fmt.date(a.erstelltAm)}</td></tr>`).join('')+'</tbody></table>':
+    '<div class="empty" style="padding:20px"><p>Keine Aufträge</p></div>';
+
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Kontakt</div>
+      <div class="dgrid">
+        <div class="df"><div class="df-lbl">Name</div><div class="df-val" style="font-weight:600">${esc(k.vorname)} ${esc(k.nachname)}</div></div>
+        <div class="df"><div class="df-lbl">Kunden-Nr.</div><div class="df-val">${esc(k.nr||k.id)}</div></div>
+        <div class="df"><div class="df-lbl">Telefon</div><div class="df-val">${esc(k.telefon)||'—'}</div></div>
+        <div class="df"><div class="df-lbl">E-Mail</div><div class="df-val">${esc(k.email)||'—'}</div></div>
+        <div class="df full"><div class="df-lbl">Adresse</div><div class="df-val">${esc(k.strasse)||'—'}${k.plz?' · '+esc(k.plz)+' '+esc(k.ort):''}</div></div>
+        ${k.notizen?`<div class="df full"><div class="df-lbl">Notizen</div><div class="df-val">${esc(k.notizen)}</div></div>`:''}
+      </div>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Fahrzeuge</div>
+      ${fzHtml}
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Aufträge (${auftraege.length})</div>
+      ${aufHtml}
+    </div>`;
+  const foot=`
+    <button class="btn btn-s" onclick="closeModal()">Schliessen</button>
+    <button class="btn btn-s" onclick="openKundeModal(${id})">Bearbeiten</button>
+    <button class="btn btn-p" onclick="closeModal();setTimeout(()=>openAuftragModal(0,${id}),50)">+ Auftrag</button>`;
+  openModal(`${k.vorname} ${k.nachname}`,body,foot,true);
+}
+
+function addFahrzeug(kundeId){openFahrzeugModal(kundeId,null)}
+function editFahrzeug(kundeId,idx){openFahrzeugModal(kundeId,idx)}
+function openFahrzeugModal(kundeId,idx){
+  const k=DB.kunden().find(x=>x.id===kundeId);if(!k)return;
+  const fz=idx!=null?(k.fahrzeuge||[])[idx]:{};
+  const body=`<div class="fgrid">
+    <div class="fg"><label>Marke</label><input id="fzMarke" value="${esc(fz.marke)}"></div>
+    <div class="fg"><label>Modell</label><input id="fzModell" value="${esc(fz.modell)}"></div>
+    <div class="fg"><label>Kennzeichen</label><input id="fzKz" value="${esc(fz.kennzeichen)}"></div>
+    <div class="fg"><label>Baujahr</label><input id="fzBj" value="${esc(fz.baujahr)}"></div>
+    <div class="fg"><label>Farbe</label><input id="fzFarbe" value="${esc(fz.farbe)}"></div>
+    <div class="fg"><label>Chassis-Nr.</label><input id="fzChassis" value="${esc(fz.chassisNr)}"></div>
+  </div>`;
+  const foot=`<button class="btn btn-s" onclick="closeModal();setTimeout(()=>viewKunde(${kundeId}),50)">Zurück</button><button class="btn btn-p" onclick="saveFahrzeug(${kundeId},${idx})">Speichern</button>`;
+  openModal(idx!=null?'Fahrzeug bearbeiten':'Fahrzeug erfassen',body,foot);
+}
+function saveFahrzeug(kundeId,idx){
+  const all=DB.kunden();const ki=all.findIndex(x=>x.id===kundeId);if(ki<0)return;
+  const fz={marke:v('fzMarke'),modell:v('fzModell'),kennzeichen:v('fzKz'),baujahr:v('fzBj'),farbe:v('fzFarbe'),chassisNr:v('fzChassis')};
+  if(!fz.marke&&!fz.modell){toast('Marke oder Modell erforderlich','err');return}
+  if(!all[ki].fahrzeuge)all[ki].fahrzeuge=[];
+  if(idx!=null)all[ki].fahrzeuge[idx]=fz;else all[ki].fahrzeuge.push(fz);
+  DB.set('kunden',all);DB.log(`Fahrzeug ${fz.marke} ${fz.modell} für ${all[ki].vorname} ${all[ki].nachname} gespeichert`,'b');
+  toast('Fahrzeug gespeichert');closeModal();setTimeout(()=>viewKunde(kundeId),50);
+}
+function delFahrzeug(kundeId,idx){
+  confirm2('Fahrzeug löschen','Fahrzeug wirklich entfernen?',()=>{
+    const all=DB.kunden();const ki=all.findIndex(x=>x.id===kundeId);
+    all[ki].fahrzeuge.splice(idx,1);DB.set('kunden',all);
+    toast('Fahrzeug entfernt');closeModal();setTimeout(()=>viewKunde(kundeId),50);
+  });
+}
+function v(id){return(document.getElementById(id)||{}).value||''}
+
+// ── Aufträge ─────────────────────────────────────────────────────
+function renderAuftraege(){
+  const all=DB.auftraege();
+  const q=(v('auftraegeSearch')||'').toLowerCase();
+  const st=v('auftraegeStatus');
+  const kunden=DB.kunden();
+  const kMap={};kunden.forEach(k=>kMap[k.id]=k);
+  let filtered=all;
+  if(q)filtered=filtered.filter(a=>(a.titel+' '+a.nr+' '+(kMap[a.kundeId]?kMap[a.kundeId].vorname+' '+kMap[a.kundeId].nachname:'')+' '+(a.kennzeichen||'')).toLowerCase().includes(q));
+  if(st)filtered=filtered.filter(a=>a.status===st);
+  filtered.sort((a,b)=>new Date(b.erstelltAm)-new Date(a.erstelltAm));
+  document.getElementById('auftraegeCount').textContent=`Aufträge (${filtered.length})`;
+  const body=document.getElementById('auftraegeBody');
+  if(!filtered.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg><p>${q||st?'Keine Treffer':'Noch keine Aufträge'}</p></div></td></tr>`;return}
+  const kFz=(k,fzId)=>{if(!k||!k.fahrzeuge)return'—';const fz=k.fahrzeuge.find(f=>f.kennzeichen===fzId)||k.fahrzeuge[0];return fz?esc(fz.marke)+' '+esc(fz.modell):'—'};
+  body.innerHTML=filtered.map(a=>{
+    const k=kMap[a.kundeId];
+    return`<tr onclick="viewAuftrag(${a.id})">
+      <td style="color:var(--text3);font-size:11px">${esc(a.nr)}</td>
+      <td style="font-weight:600">${esc(a.titel)}</td>
+      <td>${k?esc(k.vorname)+' '+esc(k.nachname):'—'}</td>
+      <td>${kFz(k,a.fahrzeugKz)}</td>
+      <td>${badgeHtml(a.status)}</td>
+      <td style="color:var(--text3);font-size:12px">${fmt.date(a.erstelltAm)}</td>
+      <td class="td-act" onclick="event.stopPropagation()">
+        <button class="btn btn-s btn-sm" onclick="openAuftragModal(${a.id})">Bearbeiten</button>
+        <button class="btn btn-g btn-sm" onclick="delAuftrag(${a.id})">✕</button>
+      </td>
+    </tr>`}).join('');
+}
+
+let currentAuftragPhotos=[];
+function openAuftragModal(id,defaultKundeId){
+  const all=DB.auftraege();
+  const a=id?all.find(x=>x.id===id):{};
+  const kunden=DB.kunden();
+  const kundenOpts=kunden.map(k=>`<option value="${k.id}"${(id?a.kundeId:defaultKundeId)==k.id?' selected':''}>${esc(k.vorname)} ${esc(k.nachname)}</option>`).join('');
+  currentAuftragPhotos=[...((a.fotos)||[])];
+  pos=[...((a.positionen)||[])];
+
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Auftrag</div>
+      <div class="fgrid">
+        <div class="fg full"><label>Titel / Beschreibung</label><input id="aTitel" value="${esc(a.titel)}" placeholder="z.B. Service BMW R1200GS"></div>
+        <div class="fg"><label>Kunde</label><select id="aKunde" onchange="updateFzSelect()">${kundenOpts}</select></div>
+        <div class="fg"><label>Fahrzeug</label><select id="aFz"></select></div>
+        <div class="fg"><label>Status</label><select id="aStatus">
+          <option value="offen"${a.status==='offen'?' selected':''}>Offen</option>
+          <option value="in-arbeit"${a.status==='in-arbeit'?' selected':''}>In Arbeit</option>
+          <option value="erledigt"${a.status==='erledigt'?' selected':''}>Erledigt</option>
+          <option value="fakturiert"${a.status==='fakturiert'?' selected':''}>Fakturiert</option>
+        </select></div>
+        <div class="fg"><label>Priorität</label><select id="aPrio">
+          <option value="normal"${a.prioritaet!=='hoch'?' selected':''}>Normal</option>
+          <option value="hoch"${a.prioritaet==='hoch'?' selected':''}>Hoch</option>
+        </select></div>
+        <div class="fg full"><label>Bemerkungen</label><textarea id="aBem">${esc(a.bemerkungen)}</textarea></div>
+      </div>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Positionen</div>
+      <div id="posContainer"></div>
+      <button class="btn btn-s btn-sm mt2" onclick="addPos()">+ Position</button>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Fotos</div>
+      <div class="phgrid" id="currentPhotos"></div>
+    </div>`;
+  const foot=`<button class="btn btn-s" onclick="closeModal()">Abbrechen</button><button class="btn btn-p" onclick="saveAuftrag(${id||0})">Speichern</button>`;
+  openModal(id?`Auftrag bearbeiten — ${a.nr}`:'Neuer Auftrag',body,foot,true);
+  updateFzSelect(id?a.fahrzeugKz:null);
+  refreshPosTable();
+  renderPhotoGrid(currentAuftragPhotos,'currentPhotos',true);
+}
+
+function updateFzSelect(selKz){
+  const kundeId=parseInt(v('aKunde'));
+  const k=DB.kunden().find(x=>x.id===kundeId);
+  const sel=document.getElementById('aFz');if(!sel)return;
+  const fzs=k?(k.fahrzeuge||[]):[];
+  sel.innerHTML='<option value="">— kein Fahrzeug —</option>'+fzs.map(fz=>`<option value="${esc(fz.kennzeichen)}"${fz.kennzeichen===selKz?' selected':''}>${esc(fz.marke)} ${esc(fz.modell)} (${esc(fz.kennzeichen||'?')})</option>`).join('');
+}
+
+function saveAuftrag(id){
+  const all=DB.auftraege();
+  const titel=v('aTitel').trim();
+  if(!titel){toast('Titel erforderlich','err');return}
+  const data={
+    id:id||DB.nextId(all),
+    nr:id?(all.find(x=>x.id===id)||{}).nr:DB.nextNr(all,'A'),
+    kundeId:parseInt(v('aKunde'))||0,
+    fahrzeugKz:v('aFz'),
+    titel,status:v('aStatus'),prioritaet:v('aPrio'),
+    bemerkungen:v('aBem'),
+    positionen:pos.map(p=>({...p,menge:parseFloat(p.menge||0),preis:parseFloat(p.preis||0)})),
+    fotos:currentAuftragPhotos,
+    erstelltAm:id?(all.find(x=>x.id===id)||{}).erstelltAm:new Date().toISOString(),
+    geaendertAm:new Date().toISOString()
+  };
+  if(id){const i=all.findIndex(x=>x.id===id);all[i]=data}else{all.push(data)}
+  DB.set('auftraege',all);
+  DB.log(`Auftrag ${data.nr}: ${data.titel} ${id?'aktualisiert':'erstellt'}`,'o');
+  closeModal();toast(id?'Auftrag gespeichert':'Auftrag erstellt');renderAuftraege();
+}
+
+function delAuftrag(id){
+  const a=DB.auftraege().find(x=>x.id===id);
+  confirm2('Auftrag löschen',`Auftrag "${a.titel}" wirklich löschen?`,()=>{
+    DB.set('auftraege',DB.auftraege().filter(x=>x.id!==id));
+    DB.log(`Auftrag ${a.nr} gelöscht`,'r');
+    toast('Auftrag gelöscht');renderAuftraege();
+  });
+}
+
+function viewAuftrag(id){
+  const a=DB.auftraege().find(x=>x.id===id);if(!a)return;
+  const k=DB.kunden().find(x=>x.id===a.kundeId);
+  const fzs=k?(k.fahrzeuge||[]).filter(f=>f.kennzeichen===a.fahrzeugKz):[];
+  const fz=fzs[0]||null;
+  const pos2=a.positionen||[];
+  const netto=pos2.reduce((s,p)=>s+p.menge*p.preis,0);
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Details</div>
+      <div class="dgrid">
+        <div class="df"><div class="df-lbl">Nr.</div><div class="df-val" style="font-weight:600">${esc(a.nr)}</div></div>
+        <div class="df"><div class="df-lbl">Status</div><div class="df-val">${badgeHtml(a.status)}</div></div>
+        <div class="df"><div class="df-lbl">Kunde</div><div class="df-val">${k?esc(k.vorname)+' '+esc(k.nachname):'—'}</div></div>
+        <div class="df"><div class="df-lbl">Fahrzeug</div><div class="df-val">${fz?esc(fz.marke)+' '+esc(fz.modell)+' ('+esc(fz.kennzeichen)+')':(a.fahrzeugKz||'—')}</div></div>
+        <div class="df"><div class="df-lbl">Erstellt</div><div class="df-val">${fmt.date(a.erstelltAm)}</div></div>
+        <div class="df"><div class="df-lbl">Priorität</div><div class="df-val">${a.prioritaet==='hoch'?'<span class="badge b-ueberfaellig">Hoch</span>':'Normal'}</div></div>
+        ${a.bemerkungen?`<div class="df full"><div class="df-lbl">Bemerkungen</div><div class="df-val">${esc(a.bemerkungen)}</div></div>`:''}
+      </div>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Positionen</div>
+      <div id="posContainer2"></div>
+    </div>
+    ${(a.fotos||[]).length?`<div class="fsec"><div class="fsec-title">Fotos</div><div class="phgrid" id="auftragPhotos"></div></div>`:''}`;
+  const foot=`
+    <button class="btn btn-s" onclick="closeModal()">Schliessen</button>
+    <button class="btn btn-s" onclick="openAuftragModal(${id})">Bearbeiten</button>
+    <button class="btn btn-p" onclick="closeModal();setTimeout(()=>openRechnungModal(0,${id}),50)">Rechnung erstellen</button>`;
+  openModal(`Auftrag ${a.nr}`,body,foot,true);
+  renderPosTable(pos2,'posContainer2',false);
+  if((a.fotos||[]).length)renderPhotoGrid(a.fotos,'auftragPhotos',false);
+}
+
+// ── Rechnungen ────────────────────────────────────────────────────
+function totalRechnung(r){
+  const netto=(r.positionen||[]).reduce((s,p)=>s+parseFloat(p.menge||0)*parseFloat(p.preis||0),0);
+  return netto*1.081;
+}
+
+function renderRechnungen(){
+  const all=DB.rechnungen();
+  const q=(v('rechnungenSearch')||'').toLowerCase();
+  const st=v('rechnungenStatus');
+  const kunden=DB.kunden();const kMap={};kunden.forEach(k=>kMap[k.id]=k);
+  let filtered=all;
+  if(q)filtered=filtered.filter(r=>(r.nr+' '+(kMap[r.kundeId]?kMap[r.kundeId].vorname+' '+kMap[r.kundeId].nachname:'')).toLowerCase().includes(q));
+  if(st)filtered=filtered.filter(r=>statusRechnung(r)===st);
+  filtered.sort((a,b)=>new Date(b.erstelltAm)-new Date(a.erstelltAm));
+  document.getElementById('rechnungenCount').textContent=`Rechnungen (${filtered.length})`;
+  const body=document.getElementById('rechnungenBody');
+  if(!filtered.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><p>${q||st?'Keine Treffer':'Noch keine Rechnungen'}</p></div></td></tr>`;return}
+  body.innerHTML=filtered.map(r=>{
+    const k=kMap[r.kundeId];const st2=statusRechnung(r);const tot=totalRechnung(r);
+    return`<tr onclick="viewRechnung(${r.id})">
+      <td style="font-weight:600">${esc(r.nr)}</td>
+      <td>${k?esc(k.vorname)+' '+esc(k.nachname):'—'}</td>
+      <td style="font-size:12px;color:var(--text3)">${fmt.date(r.datum)}</td>
+      <td style="font-size:12px;color:${st2==='ueberfaellig'?'var(--red)':'var(--text3)'}">${fmt.date(r.faelligAm)}</td>
+      <td style="font-weight:600;font-variant-numeric:tabular-nums">${fmt.chf(tot)}</td>
+      <td>${badgeHtml(st2)}</td>
+      <td class="td-act" onclick="event.stopPropagation()">
+        <button class="btn btn-s btn-sm" onclick="printRechnung(${r.id})">PDF</button>
+        <button class="btn btn-g btn-sm" onclick="delRechnung(${r.id})">✕</button>
+      </td>
+    </tr>`}).join('');
+}
+
+function openRechnungModal(id,auftragId){
+  const all=DB.rechnungen();
+  const r=id?all.find(x=>x.id===id):{};
+  const auftraege=DB.auftraege();
+  const kunden=DB.kunden();
+
+  let initPos=[...((r.positionen)||[])];
+  if(!id&&auftragId){
+    const a=auftraege.find(x=>x.id===auftragId);
+    if(a){initPos=[...(a.positionen||[])];r.kundeId=a.kundeId;r.auftragId=a.id}
+  }
+  pos=[...initPos];
+
+  const kOpts=kunden.map(k=>`<option value="${k.id}"${r.kundeId==k.id?' selected':''}>${esc(k.vorname)} ${esc(k.nachname)}</option>`).join('');
+  const today=new Date().toISOString().split('T')[0];
+  const sett=DB.settings();
+  const days=parseInt(sett.bank.zahlungsfrist||30);
+  const due=new Date();due.setDate(due.getDate()+days);
+  const dueStr=due.toISOString().split('T')[0];
+
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Rechnungsdaten</div>
+      <div class="fgrid">
+        <div class="fg"><label>Kunde</label><select id="rKunde">${kOpts}</select></div>
+        <div class="fg"><label>Rechnungsdatum</label><input type="date" id="rDatum" value="${r.datum||today}"></div>
+        <div class="fg"><label>Fällig am</label><input type="date" id="rFaellig" value="${r.faelligAm||dueStr}"></div>
+        <div class="fg"><label>Status</label><select id="rStatus">
+          <option value="offen"${r.status!=='bezahlt'?' selected':''}>Offen</option>
+          <option value="bezahlt"${r.status==='bezahlt'?' selected':''}>Bezahlt</option>
+        </select></div>
+      </div>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Positionen</div>
+      <div id="posContainer"></div>
+      <button class="btn btn-s btn-sm mt2" onclick="addPos()">+ Position</button>
+    </div>`;
+  const foot=`<button class="btn btn-s" onclick="closeModal()">Abbrechen</button><button class="btn btn-p" onclick="saveRechnung(${id||0},${auftragId||0})">Speichern</button>`;
+  openModal(id?`Rechnung ${r.nr}`:'Neue Rechnung',body,foot,true);
+  refreshPosTable();
+}
+
+function saveRechnung(id,auftragId){
+  const all=DB.rechnungen();
+  const data={
+    id:id||DB.nextId(all),
+    nr:id?(all.find(x=>x.id===id)||{}).nr:DB.nextNr(all,'R'),
+    kundeId:parseInt(v('rKunde'))||0,
+    auftragId:auftragId||0,
+    datum:v('rDatum'),
+    faelligAm:v('rFaellig'),
+    status:v('rStatus'),
+    positionen:pos.map(p=>({...p,menge:parseFloat(p.menge||0),preis:parseFloat(p.preis||0)})),
+    erstelltAm:id?(all.find(x=>x.id===id)||{}).erstelltAm:new Date().toISOString()
+  };
+  if(!data.kundeId){toast('Kunde erforderlich','err');return}
+  if(id){const i=all.findIndex(x=>x.id===id);all[i]=data}else{all.push(data)}
+  DB.set('rechnungen',all);
+  DB.log(`Rechnung ${data.nr} ${id?'aktualisiert':'erstellt'}`,'g');
+  closeModal();toast(id?'Rechnung gespeichert':'Rechnung erstellt');renderRechnungen();
+}
+
+function viewRechnung(id){
+  const r=DB.rechnungen().find(x=>x.id===id);if(!r)return;
+  const k=DB.kunden().find(x=>x.id===r.kundeId);
+  const st=statusRechnung(r);
+  const pos2=r.positionen||[];
+  const netto=pos2.reduce((s,p)=>s+p.menge*p.preis,0);
+  const body=`
+    <div class="fsec">
+      <div class="fsec-title">Rechnungsdetails</div>
+      <div class="dgrid">
+        <div class="df"><div class="df-lbl">Nr.</div><div class="df-val" style="font-weight:600">${esc(r.nr)}</div></div>
+        <div class="df"><div class="df-lbl">Status</div><div class="df-val">${badgeHtml(st)}</div></div>
+        <div class="df"><div class="df-lbl">Kunde</div><div class="df-val">${k?esc(k.vorname)+' '+esc(k.nachname):'—'}</div></div>
+        <div class="df"><div class="df-lbl">Betrag</div><div class="df-val" style="font-weight:600">${fmt.chf(totalRechnung(r))}</div></div>
+        <div class="df"><div class="df-lbl">Rechnungsdatum</div><div class="df-val">${fmt.date(r.datum)}</div></div>
+        <div class="df"><div class="df-lbl">Fällig am</div><div class="df-val" style="${st==='ueberfaellig'?'color:var(--red);font-weight:600':''}">${fmt.date(r.faelligAm)}</div></div>
+      </div>
+    </div>
+    <div class="fsec">
+      <div class="fsec-title">Positionen</div>
+      <div id="posContainerV"></div>
+    </div>`;
+  const foot=`
+    <button class="btn btn-s" onclick="closeModal()">Schliessen</button>
+    ${r.status!=='bezahlt'?`<button class="btn btn-s" onclick="markBezahlt(${id})">Als bezahlt markieren</button>`:''}
+    <button class="btn btn-s" onclick="openRechnungModal(${id})">Bearbeiten</button>
+    <button class="btn btn-p" onclick="closeModal();printRechnung(${id})">PDF drucken</button>`;
+  openModal(`Rechnung ${r.nr}`,body,foot,true);
+  renderPosTable(pos2,'posContainerV',false);
+}
+
+function markBezahlt(id){
+  const all=DB.rechnungen();const i=all.findIndex(x=>x.id===id);
+  all[i].status='bezahlt';all[i].bezahltAm=new Date().toISOString();
+  DB.set('rechnungen',all);DB.log(`Rechnung ${all[i].nr} als bezahlt markiert`,'g');
+  toast('Als bezahlt markiert');closeModal();renderRechnungen();
+}
+
+function delRechnung(id){
+  const r=DB.rechnungen().find(x=>x.id===id);
+  confirm2('Rechnung löschen',`Rechnung ${r.nr} wirklich löschen?`,()=>{
+    DB.set('rechnungen',DB.rechnungen().filter(x=>x.id!==id));
+    toast('Rechnung gelöscht');renderRechnungen();
+  });
+}
+
+function printRechnung(id){
+  const r=DB.rechnungen().find(x=>x.id===id);if(!r)return;
+  const k=DB.kunden().find(x=>x.id===r.kundeId)||{};
+  const sett=DB.settings();const fi=sett.firma;const ba=sett.bank;
+  const pos2=r.positionen||[];
+  const netto=pos2.reduce((s,p)=>s+p.menge*p.preis,0);
+  const mwst=netto*0.081;const total=netto+mwst;
+  const rows=pos2.map(p=>`<tr><td>${esc(p.bezeichnung)}</td><td style="text-align:right">${p.menge}</td><td>${esc(p.einheit||'Std.')}</td><td style="text-align:right">${parseFloat(p.preis).toFixed(2)}</td><td style="text-align:right">${(p.menge*p.preis).toFixed(2)}</td></tr>`).join('');
+  document.getElementById('parea').innerHTML=`
+    <div class="inv-wrap">
+      <div class="inv-hd">
+        <div>
+          <div class="inv-brand">${esc(fi.name||'Pipolymechanic Craft')}</div>
+          <div class="inv-brand-d">${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br>${fi.telefon?esc(fi.telefon)+'<br>':''}${fi.email?esc(fi.email)+'<br>':''}${fi.uid?'UID: '+esc(fi.uid):''}</div>
+        </div>
+        <div class="inv-meta">
+          <div class="inv-nr">Rechnung ${esc(r.nr)}</div>
+          <div class="inv-meta-d">Datum: ${fmt.date(r.datum)}<br>Fällig: ${fmt.date(r.faelligAm)}</div>
+        </div>
+      </div>
+      <div class="inv-kd">
+        <div class="inv-kd-lbl">Rechnungsempfänger</div>
+        <div class="inv-kd-n">${esc(k.vorname)} ${esc(k.nachname)}</div>
+        <div class="inv-kd-d">${k.strasse?esc(k.strasse)+'<br>':''} ${k.plz?esc(k.plz)+' '+esc(k.ort):''}</div>
+      </div>
+      <hr class="inv-hr">
+      <table class="ipt">
+        <thead><tr><th>Bezeichnung</th><th style="text-align:right">Menge</th><th>Einh.</th><th style="text-align:right">Preis</th><th style="text-align:right">Total</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="itotals">
+        <div class="itr"><span>Nettobetrag</span><span>CHF ${netto.toFixed(2)}</span></div>
+        <div class="itr"><span>MWST 8.1%</span><span>CHF ${mwst.toFixed(2)}</span></div>
+        <div class="itr grand"><span>Total CHF</span><span>${total.toFixed(2)}</span></div>
+      </div>
+      ${ba.iban?`<div class="ibank"><div class="ibank-lbl">Zahlung</div><div class="ibank-d">IBAN: ${esc(ba.iban)}<br>${ba.bank?'Bank: '+esc(ba.bank)+'<br>':''}Zahlungsfrist: ${esc(ba.zahlungsfrist)} Tage</div></div>`:''}
+      <div class="ifoot">${esc(fi.name||'Pipolymechanic Craft')} — ${esc(fi.strasse||'')} ${esc(fi.plz||'')} ${esc(fi.ort||'')} ${fi.uid?'— UID: '+esc(fi.uid):''}</div>
+    </div>`;
+  setTimeout(()=>{window.print();},100);
+}
+
+// ── Einstellungen ────────────────────────────────────────────────
+function renderEinstellungen(){
+  const s=DB.settings();const fi=s.firma;const ba=s.bank;
+  document.getElementById('settFirma').innerHTML=`
+    <div class="fg full"><label>Firmenname</label><input id="sName" value="${esc(fi.name)}"></div>
+    <div class="fg"><label>Strasse & Nr.</label><input id="sStrasse" value="${esc(fi.strasse)}"></div>
+    <div class="fg"><label>PLZ</label><input id="sPlz" value="${esc(fi.plz)}"></div>
+    <div class="fg"><label>Ort</label><input id="sOrt" value="${esc(fi.ort)}"></div>
+    <div class="fg"><label>Telefon</label><input id="sTel" value="${esc(fi.telefon)}"></div>
+    <div class="fg"><label>E-Mail</label><input id="sEmail" value="${esc(fi.email)}"></div>
+    <div class="fg"><label>Website</label><input id="sWeb" value="${esc(fi.website)}"></div>
+    <div class="fg"><label>UID-Nummer</label><input id="sUid" value="${esc(fi.uid)}" placeholder="CHE-123.456.789"></div>`;
+  document.getElementById('settBank').innerHTML=`
+    <div class="fg full"><label>IBAN</label><input id="bIban" value="${esc(ba.iban)}" placeholder="CH00 0000 0000 0000 0000 0"></div>
+    <div class="fg"><label>Bank / Institut</label><input id="bBank" value="${esc(ba.bank)}"></div>
+    <div class="fg"><label>Zahlungsfrist (Tage)</label><input type="number" id="bTage" value="${esc(ba.zahlungsfrist||'30')}" min="1"></div>`;
+}
+
+function saveSettings(){
+  const s={
+    firma:{name:v('sName'),strasse:v('sStrasse'),plz:v('sPlz'),ort:v('sOrt'),telefon:v('sTel'),email:v('sEmail'),website:v('sWeb'),uid:v('sUid')},
+    bank:{iban:v('bIban'),bank:v('bBank'),zahlungsfrist:v('bTage')}
+  };
+  DB.set('settings',s);toast('Einstellungen gespeichert');
+}
+
+// ── Export ────────────────────────────────────────────────────────
+function exportData(){
+  const data={kunden:DB.kunden(),auftraege:DB.auftraege(),rechnungen:DB.rechnungen(),settings:DB.settings(),exportiert:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='pipolymechanic-export-'+new Date().toISOString().split('T')[0]+'.json';a.click();
+  URL.revokeObjectURL(url);toast('Export heruntergeladen');
+}
+
+// ── Search ────────────────────────────────────────────────────────
+document.getElementById('globalSearch').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  if(!q)return;
+  // search across kunden, auftraege
+  const kunden=DB.kunden().filter(k=>(k.vorname+' '+k.nachname+' '+k.email).toLowerCase().includes(q));
+  const auftraege=DB.auftraege().filter(a=>a.titel.toLowerCase().includes(q));
+  if(kunden.length){goto('kunden');document.getElementById('kundenSearch').value=q;renderKunden()}
+  else if(auftraege.length){goto('auftraege');document.getElementById('auftraegeSearch').value=q;renderAuftraege()}
+});
+
+// ── Init ─────────────────────────────────────────────────────────
+goto('dashboard');
+</script>

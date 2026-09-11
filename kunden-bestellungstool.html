@@ -167,12 +167,19 @@ select option{background:var(--surface);color:var(--text)}
 
 /* ── Invoice print view ── */
 .inv-wrap{background:#fff;color:#1a1a22;padding:44px;max-width:780px;margin:0 auto;border:1px solid var(--border);border-radius:var(--rl);font-family:'Inter',sans-serif}
+.inv-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px}
+.inv-logo{max-width:160px;max-height:80px;object-fit:contain}
+.inv-logo-text{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:#D63031;line-height:1}
+.inv-sender{text-align:right;font-size:11.5px;line-height:1.75;color:#444}
+.inv-sender-name{font-weight:700;font-size:13px;color:#1a1a22;margin-bottom:2px}
+.inv-mid{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #e0e0e0}
 .inv-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px}
 .inv-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#D63031}
 .inv-brand-d{font-size:11.5px;line-height:1.7;color:#555;margin-top:3px}
 .inv-meta{text-align:right}
-.inv-nr{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px}
-.inv-meta-d{font-size:11.5px;color:#555;line-height:1.8}
+.inv-nr{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#1a1a22}
+.inv-meta-d{font-size:11.5px;color:#555;line-height:1.9}
+.inv-meta-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:4px}
 .inv-kd{margin-bottom:28px}
 .inv-kd-lbl{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:5px}
 .inv-kd-n{font-weight:600;font-size:14px}
@@ -1091,22 +1098,30 @@ function printRechnung(id){
   const netto=pos2.reduce((s,p)=>s+p.menge*p.preis,0);
   const mwst=netto*0.081;const total=netto+mwst;
   const rows=pos2.map(p=>`<tr><td>${esc(p.bezeichnung)}</td><td style="text-align:right">${p.menge}</td><td>${esc(p.einheit||'Std.')}</td><td style="text-align:right">${parseFloat(p.preis).toFixed(2)}</td><td style="text-align:right">${(p.menge*p.preis).toFixed(2)}</td></tr>`).join('');
+  const logo=DB.get('logo');
   document.getElementById('parea').innerHTML=`
     <div class="inv-wrap">
-      <div class="inv-hd">
+      <div class="inv-top">
+        <div>${logo?`<img src="${logo}" class="inv-logo" alt="Logo">`:`<div class="inv-logo-text">${esc(fi.name||'Pipolymechanic Craft')}</div>`}</div>
+        <div class="inv-sender">
+          <div class="inv-sender-name">${esc(fi.name||'Pipolymechanic Craft')}</div>
+          ${fi.inhaber?esc(fi.inhaber)+'<br>':''}${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br>${fi.telefon?esc(fi.telefon)+'<br>':''}${fi.email?esc(fi.email):''}${fi.uid?'<br>UID: '+esc(fi.uid):''}
+        </div>
+      </div>
+      <div class="inv-mid">
         <div>
-          <div class="inv-brand">${esc(fi.name||'Pipolymechanic Craft')}</div>
-          <div class="inv-brand-d">${fi.inhaber?esc(fi.inhaber)+'<br>':''}${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br>${fi.telefon?esc(fi.telefon)+'<br>':''}${fi.email?esc(fi.email)+'<br>':''}${fi.uid?'UID: '+esc(fi.uid):''}</div>
+          <div class="inv-kd-lbl">Rechnungsempfänger</div>
+          <div class="inv-kd-n">${esc(k.vorname)} ${esc(k.nachname)}</div>
+          <div class="inv-kd-d">${k.strasse?esc(k.strasse)+'<br>':''}${k.plz?esc(k.plz)+' '+esc(k.ort):''}</div>
         </div>
         <div class="inv-meta">
           <div class="inv-nr">Rechnung ${esc(r.nr)}</div>
-          <div class="inv-meta-d">Datum: ${fmt.date(r.datum)}<br>Fällig: ${fmt.date(r.faelligAm)}</div>
+          <div class="inv-meta-d" style="margin-top:8px">
+            Datum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${fmt.date(r.datum)}<br>
+            Zahlbar bis&nbsp;&nbsp;${fmt.date(r.faelligAm)}<br>
+            ${fi.inhaber?'Ihr Kontakt&nbsp;&nbsp;'+esc(fi.inhaber):''}
+          </div>
         </div>
-      </div>
-      <div class="inv-kd">
-        <div class="inv-kd-lbl">Rechnungsempfänger</div>
-        <div class="inv-kd-n">${esc(k.vorname)} ${esc(k.nachname)}</div>
-        <div class="inv-kd-d">${k.strasse?esc(k.strasse)+'<br>':''} ${k.plz?esc(k.plz)+' '+esc(k.ort):''}</div>
       </div>
       <hr class="inv-hr">
       <table class="ipt">
@@ -1127,9 +1142,23 @@ function printRechnung(id){
 // ── Einstellungen ────────────────────────────────────────────────
 function renderEinstellungen(){
   const s=DB.settings();const fi=s.firma;const ba=s.bank;
+  const logo=DB.get('logo');
   document.getElementById('settFirma').innerHTML=`
+    <div class="fg full">
+      <label>Logo (wird oben links auf Rechnungen angezeigt)</label>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
+        <div id="logoPreview" style="width:120px;height:60px;border:2px dashed var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg)">
+          ${logo?`<img src="${logo}" style="max-width:100%;max-height:100%;object-fit:contain">`:'<span style="font-size:11px;color:var(--text3)">Kein Logo</span>'}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn btn-s btn-sm" onclick="document.getElementById('logoInp').click()">Logo hochladen</button>
+          ${logo?`<button class="btn btn-g btn-sm" onclick="DB.set('logo',null);renderEinstellungen();toast('Logo entfernt')">Entfernen</button>`:''}
+        </div>
+        <input type="file" id="logoInp" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+      </div>
+    </div>
     <div class="fg full"><label>Firmenname</label><input id="sName" value="${esc(fi.name)}"></div>
-    <div class="fg full"><label>Inhaber / Kontaktperson</label><input id="sInhaber" value="${esc(fi.inhaber)}" placeholder="z.B. Fabio Berta"></div>
+    <div class="fg full"><label>Inhaber / Kontaktperson</label><input id="sInhaber" value="${esc(fi.inhaber||'')}" placeholder="z.B. Fabio Berta"></div>
     <div class="fg"><label>Strasse & Nr.</label><input id="sStrasse" value="${esc(fi.strasse)}"></div>
     <div class="fg"><label>PLZ</label><input id="sPlz" value="${esc(fi.plz)}"></div>
     <div class="fg"><label>Ort</label><input id="sOrt" value="${esc(fi.ort)}"></div>
@@ -1142,6 +1171,15 @@ function renderEinstellungen(){
     <div class="fg full"><label>IBAN</label><input id="bIban" value="${esc(ba.iban)}" placeholder="CH00 0000 0000 0000 0000 0"></div>
     <div class="fg"><label>Bank / Institut</label><input id="bBank" value="${esc(ba.bank)}"></div>
     <div class="fg"><label>Zahlungsfrist (Tage)</label><input type="number" id="bTage" value="${esc(ba.zahlungsfrist||'30')}" min="1"></div>`;
+}
+
+function uploadLogo(input){
+  const f=input.files[0];if(!f)return;
+  resizeImg(f,320).then(b64=>{
+    DB.set('logo',b64);
+    toast('Logo gespeichert');
+    renderEinstellungen();
+  });
 }
 
 function saveSettings(){

@@ -1096,7 +1096,7 @@ function printRechnung(id){
       <div class="inv-hd">
         <div>
           <div class="inv-brand">${esc(fi.name||'Pipolymechanic Craft')}</div>
-          <div class="inv-brand-d">${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br>${fi.telefon?esc(fi.telefon)+'<br>':''}${fi.email?esc(fi.email)+'<br>':''}${fi.uid?'UID: '+esc(fi.uid):''}</div>
+          <div class="inv-brand-d">${fi.inhaber?esc(fi.inhaber)+'<br>':''}${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br>${fi.telefon?esc(fi.telefon)+'<br>':''}${fi.email?esc(fi.email)+'<br>':''}${fi.uid?'UID: '+esc(fi.uid):''}</div>
         </div>
         <div class="inv-meta">
           <div class="inv-nr">Rechnung ${esc(r.nr)}</div>
@@ -1118,8 +1118,8 @@ function printRechnung(id){
         <div class="itr"><span>MWST 8.1%</span><span>CHF ${mwst.toFixed(2)}</span></div>
         <div class="itr grand"><span>Total CHF</span><span>${total.toFixed(2)}</span></div>
       </div>
-      ${ba.iban?`<div class="ibank"><div class="ibank-lbl">Zahlung</div><div class="ibank-d">IBAN: ${esc(ba.iban)}<br>${ba.bank?'Bank: '+esc(ba.bank)+'<br>':''}Zahlungsfrist: ${esc(ba.zahlungsfrist)} Tage</div></div>`:''}
-      <div class="ifoot">${esc(fi.name||'Pipolymechanic Craft')} — ${esc(fi.strasse||'')} ${esc(fi.plz||'')} ${esc(fi.ort||'')} ${fi.uid?'— UID: '+esc(fi.uid):''}</div>
+      ${ba.iban?`<div class="ibank"><div class="ibank-lbl">Konto / Zahlbar an</div><div class="ibank-d"><strong>${esc(ba.kontoinhaber||fi.name||'Pipolymechanic Craft')}</strong><br>${esc(fi.strasse)}<br>${esc(fi.plz)} ${esc(fi.ort)}<br><br>IBAN: ${esc(ba.iban)}<br>${ba.bank?'Bank: '+esc(ba.bank)+'<br>':''}Zahlungsfrist: ${esc(ba.zahlungsfrist)} Tage</div></div>`:''}
+      <div class="ifoot">${esc(fi.name||'Pipolymechanic Craft')}${fi.inhaber?' · '+esc(fi.inhaber):''} — ${esc(fi.strasse||'')} ${esc(fi.plz||'')} ${esc(fi.ort||'')} ${fi.uid?'— UID: '+esc(fi.uid):''}</div>
     </div>`;
   setTimeout(()=>{window.print();},100);
 }
@@ -1129,6 +1129,7 @@ function renderEinstellungen(){
   const s=DB.settings();const fi=s.firma;const ba=s.bank;
   document.getElementById('settFirma').innerHTML=`
     <div class="fg full"><label>Firmenname</label><input id="sName" value="${esc(fi.name)}"></div>
+    <div class="fg full"><label>Inhaber / Kontaktperson</label><input id="sInhaber" value="${esc(fi.inhaber)}" placeholder="z.B. Fabio Berta"></div>
     <div class="fg"><label>Strasse & Nr.</label><input id="sStrasse" value="${esc(fi.strasse)}"></div>
     <div class="fg"><label>PLZ</label><input id="sPlz" value="${esc(fi.plz)}"></div>
     <div class="fg"><label>Ort</label><input id="sOrt" value="${esc(fi.ort)}"></div>
@@ -1137,6 +1138,7 @@ function renderEinstellungen(){
     <div class="fg"><label>Website</label><input id="sWeb" value="${esc(fi.website)}"></div>
     <div class="fg"><label>UID-Nummer</label><input id="sUid" value="${esc(fi.uid)}" placeholder="CHE-123.456.789"></div>`;
   document.getElementById('settBank').innerHTML=`
+    <div class="fg full"><label>Kontoinhaber (erscheint auf Rechnung als "Zahlbar an")</label><input id="bKontoinhaber" value="${esc(ba.kontoinhaber)}" placeholder="z.B. Fabio Berta"></div>
     <div class="fg full"><label>IBAN</label><input id="bIban" value="${esc(ba.iban)}" placeholder="CH00 0000 0000 0000 0000 0"></div>
     <div class="fg"><label>Bank / Institut</label><input id="bBank" value="${esc(ba.bank)}"></div>
     <div class="fg"><label>Zahlungsfrist (Tage)</label><input type="number" id="bTage" value="${esc(ba.zahlungsfrist||'30')}" min="1"></div>`;
@@ -1144,8 +1146,8 @@ function renderEinstellungen(){
 
 function saveSettings(){
   const s={
-    firma:{name:v('sName'),strasse:v('sStrasse'),plz:v('sPlz'),ort:v('sOrt'),telefon:v('sTel'),email:v('sEmail'),website:v('sWeb'),uid:v('sUid')},
-    bank:{iban:v('bIban'),bank:v('bBank'),zahlungsfrist:v('bTage')}
+    firma:{name:v('sName'),inhaber:v('sInhaber'),strasse:v('sStrasse'),plz:v('sPlz'),ort:v('sOrt'),telefon:v('sTel'),email:v('sEmail'),website:v('sWeb'),uid:v('sUid')},
+    bank:{kontoinhaber:v('bKontoinhaber'),iban:v('bIban'),bank:v('bBank'),zahlungsfrist:v('bTage')}
   };
   DB.set('settings',s);toast('Einstellungen gespeichert');
 }
